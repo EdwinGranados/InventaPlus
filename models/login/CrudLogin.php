@@ -1,5 +1,5 @@
 <?php
-    require_once 'Claseconexion.php';
+    require_once '../models/ClaseConexion.php';
     require_once 'claseLogin.php';
     
     class CrudLogin {

@@ -22,12 +22,10 @@
             <li class="nav-item">
               <a class="navbar-brand" href="croche.html">Proveedores</a>
             </li>
-          </ul>
-          <form action="subscripcion.html" class="d-flex">
-            <button class="btn btn-outline-primary" type="submit">
-              Registrar nuevo usuario
-            </button>
-          </form>
+            <li>
+              <a class="btn btn-outline-primary" href="registoUsuario.php?tipoRegistro=C">Registrar Usuarios</a>
+            </li>
+          </ul>       
         </div>
       </div>
     </nav>

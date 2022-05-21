@@ -1,7 +1,7 @@
 <?php
     require_once '../models/ClaseConexion.php';
-    require_once '../models/CrudLogin.php';
-    require_once '../models/ClaseLogin.php';
+    require_once '../models/login/CrudLogin.php';
+    require_once '../models/login/ClaseLogin.php';
     
 
     switch ($_GET['tipo']) {
@@ -12,6 +12,8 @@
             $login = CrudLogin::buscarPorUsuario($usuario);
             if ($login[1]==$contrasena && $login[2] == 1) {
                 header("Location: ../views/VistaPrincipal.php");
+            }else{
+                header("Location: ../views/login.php");
             }
             break;
         case 'rcu':
