@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 14-05-2022 a las 01:48:41
--- Versión del servidor: 10.4.18-MariaDB
--- Versión de PHP: 7.3.27
+-- Servidor: localhost
+-- Tiempo de generación: 21-05-2022 a las 18:12:13
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 8.1.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,10 +28,13 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `clientes` (
-  `idCliente` bigint(20) UNSIGNED NOT NULL,
-  `nombreCliente` varchar(45) NOT NULL,
-  `numeroCliente` int(10) NOT NULL,
-  `correoCliente` varchar(60) NOT NULL
+  `IdCliente` int(11) NOT NULL,
+  `NombreCliente` mediumtext CHARACTER SET utf8 NOT NULL,
+  `NIT` int(10) NOT NULL,
+  `Correo` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `IdFactura` int(11) NOT NULL,
+  `Telefono` int(12) DEFAULT NULL,
+  `dirección` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -41,23 +44,24 @@ CREATE TABLE `clientes` (
 --
 
 CREATE TABLE `detalleventas` (
-  `idDetalleVenta` bigint(11) UNSIGNED NOT NULL,
-  `idProveedor` int(11) NOT NULL,
-  `idProducto` int(11) NOT NULL,
-  `idCliente` int(11) NOT NULL,
-  `idUsuario` int(11) NOT NULL
+  `IdDetalle` int(11) NOT NULL,
+  `IdVenta` int(11) NOT NULL,
+  `IdProducto` int(11) NOT NULL,
+  `TotalProducto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `facturas`
+-- Estructura de tabla para la tabla `logs`
 --
 
-CREATE TABLE `facturas` (
-  `idFactura` bigint(20) UNSIGNED NOT NULL,
-  `idDetalleVenta` int(11) NOT NULL,
-  `fechaCompra` timestamp NOT NULL DEFAULT current_timestamp()
+CREATE TABLE `logs` (
+  `LOGID` int(11) NOT NULL,
+  `LOGUsuario` int(11) NOT NULL,
+  `LOGVenta` int(11) DEFAULT NULL,
+  `LOGDescripcion` varchar(500) DEFAULT NULL,
+  `LogFecha` int(11) NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -67,24 +71,11 @@ CREATE TABLE `facturas` (
 --
 
 CREATE TABLE `productos` (
-  `idProductos` bigint(20) UNSIGNED NOT NULL,
-  `nombreProducto` varchar(45) NOT NULL,
-  `descripcion` text NOT NULL,
-  `valor` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `proveedores`
---
-
-CREATE TABLE `proveedores` (
-  `idProveedor` bigint(20) UNSIGNED NOT NULL,
-  `nombreProveedor` varchar(45) NOT NULL,
-  `numProveedor` int(10) NOT NULL,
-  `correoProveedor` varchar(60) NOT NULL
+  `IdProducto` int(11) NOT NULL,
+  `NombreProducto` mediumtext CHARACTER SET utf8 NOT NULL,
+  `Descripcion` mediumtext CHARACTER SET utf8 DEFAULT NULL,
+  `Valor` int(20) NOT NULL,
+  `Cantidad` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -94,11 +85,35 @@ CREATE TABLE `proveedores` (
 --
 
 CREATE TABLE `usuarios` (
-  `idUsuario` bigint(20) UNSIGNED NOT NULL,
-  `usuario` varchar(45) NOT NULL,
-  `password` varchar(45) DEFAULT NULL,
-  `correo` varchar(60) DEFAULT NULL,
-  `fechaCreacion` timestamp NOT NULL DEFAULT current_timestamp()
+  `IdUsuario` int(11) NOT NULL,
+  `Usuario` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `Contraseña` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `Activo` bit(1) NOT NULL,
+  `FechaCreacion` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`IdUsuario`, `Usuario`, `Contraseña`, `Activo`, `FechaCreacion`) VALUES
+(1, 'Desarrollo', 'Desarrollo', b'1', '2022-05-21');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ventas`
+--
+
+CREATE TABLE `ventas` (
+  `Idventa` int(11) NOT NULL,
+  `IdCliente` int(11) NOT NULL,
+  `IdDetalleVenta` int(11) NOT NULL,
+  `TotalVenta` int(11) NOT NULL,
+  `FechaVenta` date NOT NULL DEFAULT current_timestamp(),
+  `SubTotalVenta` int(11) NOT NULL,
+  `Descuentos` int(11) NOT NULL DEFAULT 0,
+  `Estado` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0=registrado,1=gestionado,2=entregado'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -109,37 +124,100 @@ CREATE TABLE `usuarios` (
 -- Indices de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`idCliente`);
+  ADD PRIMARY KEY (`IdCliente`);
 
 --
 -- Indices de la tabla `detalleventas`
 --
 ALTER TABLE `detalleventas`
-  ADD PRIMARY KEY (`idDetalleVenta`);
+  ADD KEY `FK_VentaDetalleVenta` (`IdVenta`),
+  ADD KEY `FK_ProductosDetalleVenta` (`IdProducto`);
 
 --
--- Indices de la tabla `facturas`
+-- Indices de la tabla `logs`
 --
-ALTER TABLE `facturas`
-  ADD PRIMARY KEY (`idFactura`);
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`LOGID`),
+  ADD KEY `FK_LOGUSUARIO_USURIO` (`LOGUsuario`),
+  ADD KEY `FK_LOGVenta_Ventas` (`LOGVenta`) USING BTREE;
 
 --
 -- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
-  ADD PRIMARY KEY (`idProductos`);
-
---
--- Indices de la tabla `proveedores`
---
-ALTER TABLE `proveedores`
-  ADD PRIMARY KEY (`idProveedor`);
+  ADD PRIMARY KEY (`IdProducto`);
 
 --
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`idUsuario`);
+  ADD PRIMARY KEY (`IdUsuario`);
+
+--
+-- Indices de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  ADD PRIMARY KEY (`Idventa`),
+  ADD KEY `FK_ClienteVenta` (`IdCliente`),
+  ADD KEY `FKVentaDetalleVenta` (`IdDetalleVenta`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  MODIFY `IdCliente` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `LOGID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `productos`
+--
+ALTER TABLE `productos`
+  MODIFY `IdProducto` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  MODIFY `Idventa` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `detalleventas`
+--
+ALTER TABLE `detalleventas`
+  ADD CONSTRAINT `FK_ProductosDetalleVenta` FOREIGN KEY (`IdProducto`) REFERENCES `productos` (`IdProducto`),
+  ADD CONSTRAINT `FK_VentaDetalleVenta` FOREIGN KEY (`IdVenta`) REFERENCES `ventas` (`Idventa`);
+
+--
+-- Filtros para la tabla `logs`
+--
+ALTER TABLE `logs`
+  ADD CONSTRAINT `FK_LOGUSUARIO_USURIO` FOREIGN KEY (`LOGUsuario`) REFERENCES `usuarios` (`IdUsuario`),
+  ADD CONSTRAINT `FK_LOGVenta_Ventas` FOREIGN KEY (`LOGVenta`) REFERENCES `ventas` (`Idventa`);
+
+--
+-- Filtros para la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  ADD CONSTRAINT `FK_ClienteVenta` FOREIGN KEY (`IdCliente`) REFERENCES `clientes` (`IdCliente`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
