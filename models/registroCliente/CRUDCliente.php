@@ -47,6 +47,14 @@
             $con->cerrarConexion();
             return $cont;//se envia un solo registro
         }
+
+        public static function EliminarCleinte($id){
+            $con=new claseConexion();
+            $sql="DELETE FROM  clientes WHERE IdCliente =".$id;
+            $res=$con->ejecutarActualizacion($sql);
+            $con->cerrarConexion();
+            return $res;
+        }
     
 
     }

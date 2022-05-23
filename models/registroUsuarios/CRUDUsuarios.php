@@ -28,6 +28,7 @@
             $con=new claseConexion();
             $sql="UPDATE usuarios SET Usuario='".$usuario->getUsuario()."'
             ,Activo=".$usuario->getEstado()." WHERE IdUsuario =".$usuario->getIdUsuario();
+            echo $sql;
             $res=$con->ejecutarActualizacion($sql);
             $con->cerrarConexion();
             return $res;
@@ -44,6 +45,14 @@
         public static function listarUsuarios(){
             $con=new claseConexion();
             $sql="SELECT  * FROM  usuarios";
+            $cont=$con->ejecutarConsulta($sql);
+            $con->cerrarConexion();
+            return $cont;//se envia un solo registro
+        }
+
+        public static function listarUsuariosAvtivos(){
+            $con=new claseConexion();
+            $sql="SELECT  * FROM  usuarios WHERE Activo = 1";
             $cont=$con->ejecutarConsulta($sql);
             $con->cerrarConexion();
             return $cont;//se envia un solo registro

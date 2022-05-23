@@ -11,19 +11,16 @@
         <div class="navbar">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="navbar-brand" href="croche.html">stock</a>
-            </li>
-            <li class="nav-item">
-              <a class="navbar-brand" href="registroProducto.php?tipoRegistro=C">Productos</a>
+              <a class="navbar-brand" href="formulario.php?TipoLista=P">Productos</a>
             </li>
             <li class="nav-item">
               <a class="navbar-brand" href="croche.html">Ventas</a>
             </li>
             <li class="nav-item">
-              <a class="navbar-brand" href="registroCliente.php?tipoRegistro=C">Clientes</a>
+              <a class="navbar-brand" href="formulario.php?TipoLista=C">Clientes</a>
             </li>
-            <li>
-              <a class="btn btn-outline-primary" href="registoUsuario.php?tipoRegistro=C">Registrar Usuarios</a>
+            <li class="nav-item">
+              <a class="navbar-brand" href="formulario.php?TipoLista=U">Usuarios</a>
             </li>
           </ul>       
         </div>

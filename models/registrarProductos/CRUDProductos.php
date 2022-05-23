@@ -43,5 +43,11 @@
             return $cont;//se envia un solo registro
         }
     
-
+        public static function EliminarProducto($id){
+            $con=new claseConexion();
+            $sql="DELETE FROM  productos WHERE IdProducto =".$id;
+            $res=$con->ejecutarActualizacion($sql);
+            $con->cerrarConexion();
+            return $res;
+        }
     }

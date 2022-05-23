@@ -35,6 +35,12 @@
                 header("Location: ../views/registroCliente.php?tipoRegistro=A&id=".$_POST['id']."&res=2");
             }
             break;
+        case 'D':
+            $res=CrudProducto::EliminarCleinte($_GET['id']);
+            if ($res == 1){
+                header("Location: ../views/formulario.php?TipoLista=C");
+            }
+            break;
         default:
             break;
     }
