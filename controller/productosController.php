@@ -25,7 +25,7 @@
             $producto->setCantidad($_POST['cantidad']);
             $res=CrudProducto::ActualizarProducto($producto);
             if ($res == 1){
-                header("Location: ../views/registroProducto.php?tipoRegistro=A&id=".$_POST['id']."&res=2");
+                header("Location: ../views/registroProducto.php?tipoRegistro=A&id=".$_POST['idProducto']."&res=2");
             }
             break;
         case 'D':
