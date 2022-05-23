@@ -19,20 +19,16 @@
             }
             break;
         case 'A':
-
             $cliente= new cliente();
-
-            $cliente->setIdCliente($_POST['id']);
+            $cliente->setIdCliente($_POST['idCliente']);
             $cliente->setNombreCliente( $_POST['nombreCliente']);
             $cliente->setNIT($_POST['NIT']);
             $cliente->setCorreo( $_POST['Correo']);
             $cliente->setTelefono($_POST['telefono']);
             $cliente->setDirección( $_POST['dirección']);
-
-
             $res=CrudCliente::ActualizarCliente($cliente);
             if ($res == 1){
-                header("Location: ../views/registroCliente.php?tipoRegistro=A&id=".$_POST['id']."&res=2");
+                header("Location: ../views/registroCliente.php?tipoRegistro=A&id=".$_POST['idCliente']."&res=2");
             }
             break;
         case 'D':
